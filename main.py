@@ -46,7 +46,7 @@ async def list_books_by_published_year(published_year: int = Query(ge = 0)):
 @app.post("/books", status_code = status.HTTP_201_CREATED)
 async def create_book(book_request: BookRequest):
     new_book = Book(**book_request.model_dump())
-    new_book = find_book_by_id(new_book)
+    new_book = set_book_id(new_book)
     BOOKS.append(new_book)
     return new_book
 
@@ -70,6 +70,6 @@ async def delete_book(book_id: int = Path(ge = 1)):
 
     raise HTTPException(status_code = 404, detail="Book not found")
 
-def find_book_by_id(book: Book):
+def set_book_id(book: Book):
     book.id = 1 if len(BOOKS) == 0 else BOOKS[-1].id + 1
     return book
